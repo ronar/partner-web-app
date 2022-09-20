@@ -123,6 +123,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.4.4",
+    "gh-pages": "^4.0.0",
     "isomorphic-fetch": "^2.2.1",
     "jest-junit": "^9.0.0",
     "mocha": "^6.2.2",
@@ -147,6 +148,8 @@
   "scripts": {
     "postinstall": "rimraf public/virtualbackground && copyfiles -f node_modules/@twilio/video-processors/dist/build/* public/virtualbackground",
     "start": "npx cross-env REACT_APP_VERSION=$(node -e \"console.log(require('./package.json').version)\") concurrently npm:server npm:dev",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages-d build",
     "dev": "node scripts/start.js",
     "build": "node ./scripts/build.js",
     "test": "cross-env TZ=utc jest --config jest.config.js",

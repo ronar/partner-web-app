@@ -1,5 +1,6 @@
 {
-  "name": "twilio-video-app-react",
+  "name": "partner-web-app",
+  "homepage": "https://github.com/ronar/partner-web-app",
   "version": "0.7.1",
   "private": true,
   "license": "Apache-2.0",

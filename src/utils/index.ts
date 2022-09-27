@@ -69,6 +69,20 @@ export async function isPermissionDenied(name: 'camera' | 'microphone') {
   }
 }
 
+export function chunk(array: any, chunkSize: any) {
+  var index = 0,
+    length = array ? array.length : 0,
+    result = [];
+
+  chunkSize = Math.max(+chunkSize || 1, 1);
+
+  while (index < length) {
+      result.push(array.slice(index, index += chunkSize));
+  }
+
+  return result;
+}
+
 // export const toQueryString = obj => {
 export function toQueryString<T>(obj: T): string {
     var parts = [];

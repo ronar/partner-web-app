@@ -24,6 +24,7 @@ import Typography from '@material-ui/core/Typography';
 import SlidingUpPanel from 'rn-sliding-up-panel';
 
 import SessionDetails from '../SessionDetails/SessionDetails';
+import RunningLatePopup from '../RunningLatePopup/RunningLatePopup';
 
 import LocationIcon from '../../icons/LocationIcon';
 import ArrowRightIcon from '../../icons/ArrowRightIcon';
@@ -151,7 +152,15 @@ const height = getViewportHeight();
 
 export default function SessionsPage() {
   const classes = useStyles();
-  const { signIn, user, getBooking, booking, upcomingBookings, getUpcomingBookings, isAuthReady } = useAppState();
+  const { signIn,
+    user,
+    getBooking,
+    booking,
+    upcomingBookings,
+    getUpcomingBookings,
+    isAuthReady,
+    runningLate,
+  } = useAppState();
   const history = useHistory();
   const location = useLocation<{ from: Location }>();
   const { BookingId } = useParams<{ BookingId?: string }>();
@@ -162,6 +171,7 @@ export default function SessionsPage() {
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [bookingStatus, setBookingStatus] = useState('HAS_A_PARTNER');
   const [sessionType, setSessionType] = useState('');
+  const [ runningLatePopupOpen, setRunningLatePopupOpen ] = useState(false);
   const [authError, setAuthError] = useState<Error | null>(null);
 
   const isAuthEnabled = true; // Boolean(process.env.REACT_APP_SET_AUTH);
@@ -230,11 +240,30 @@ export default function SessionsPage() {
     }
   }, [history]);
 
-  const handleSessionDetailsPopupClose = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+  const handleSessionDetailsPopupClose = useCallback(() => {
     panelRef.current && panelRef.current.hide();
 
     history.push({ pathname: '/sessions-page' });
   }, [history]);
+
+  const handleRunningLateClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    setRunningLatePopupOpen(true);
+
+    history.push({ pathname: '/sessions-page' });
+  }, [history, setRunningLatePopupOpen]);
+
+  const handleRunningLateSubmit = useCallback((e: MouseEvent<HTMLButtonElement>, delayInMinutes?: number) => {
+    if (user && booking) {
+      runningLate(user?.id!, booking?.id!, delayInMinutes);
+
+      // onRunningLateClick && onRunningLateClick();
+    }
+  }, [user, booking]);
+
+  const handleRunningLatePopupClose = useCallback(() => {
+    setRunningLatePopupOpen(false);
+  }, [setRunningLatePopupOpen]);
+
 
   // //   e.preventDefault();
   // //   login();
@@ -403,12 +432,18 @@ export default function SessionsPage() {
           booking={booking}
           status={bookingStatus}
           sessionType={sessionType}
+          onRunningLateClick={handleRunningLateClick}
           onClick={handleCtaClick}
           onClose={handleSessionDetailsPopupClose}
         />
       </div> ): <div />
       }
     </SlidingUpPanel>
+    <RunningLatePopup
+      open={runningLatePopupOpen}
+      onClose={handleRunningLatePopupClose}
+      onSubmit={handleRunningLateSubmit}
+    />
     </>
   );
 }

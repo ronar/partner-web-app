@@ -217,16 +217,17 @@ interface SessionDetailsProps {
   booking: Booking;
   status: string;
   sessionType: string;
-  onClick(): void;
-  onClose(e: MouseEvent<HTMLButtonElement>): void;
+  onClick(e: MouseEvent<HTMLButtonElement>): void;
+  onRunningLateClick(e: MouseEvent<HTMLButtonElement>, delayInMinutes?: number): void;
+  onClose(): void;
 }
 
-export default function SessionDetails({ booking, sessionType, onClick, onClose }: PropsWithChildren<SessionDetailsProps>) {
+export default function SessionDetails({ booking, sessionType, onRunningLateClick, onClick, onClose }: PropsWithChildren<SessionDetailsProps>) {
   const classes = useStyles();
   const {
     signIn,
     user,
-    runningLate,
+    // runningLate,
     startSession,
     stopSession,
     declineSession,
@@ -294,12 +295,6 @@ export default function SessionDetails({ booking, sessionType, onClick, onClose 
     }
 
   }, [booking]);
-
-  const handleRunningLateClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    if (user && booking) {
-      runningLate(user?.id!, booking?.id!);
-    }
-  }, [user, booking]);
 
   const handleStartStopCtaClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     if (user && booking) {
@@ -714,7 +709,7 @@ export default function SessionDetails({ booking, sessionType, onClick, onClose 
             style={{
               // backgroundColor: status === 'IN_PROGRESS' ? '#303740' : '#E94E32'
             }}
-            onClick={handleRunningLateClick}
+            onClick={onRunningLateClick}
           >
             Running late?
           </Button>

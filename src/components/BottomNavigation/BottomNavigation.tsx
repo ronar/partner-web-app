@@ -410,7 +410,7 @@ export default function Bottomnavigation() {
           // onClick={(event) => handleListItemClick(event, 1)}
         >
           <NavLink
-            to="/availability-page"
+            to="/availability-calendar"
             isActive={(match, location) => {
               if (!match) {
                 return false;

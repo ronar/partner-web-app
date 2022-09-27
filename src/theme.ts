@@ -19,6 +19,7 @@ declare module '@material-ui/core/styles/createTheme' {
     greyMain: string;
     greyLight: string;
     greenMain: string;
+    blackGrey: string;
     red: string;
     footerHeight: number;
     mobileTopBarHeight: number;
@@ -41,6 +42,7 @@ declare module '@material-ui/core/styles/createTheme' {
     greyMain: string;
     greyLight: string;
     greenMain: string;
+    blackGrey: string;
     red: string;
     footerHeight: number;
     mobileTopBarHeight: number;
@@ -174,6 +176,8 @@ export default createTheme({
       },
       contained: {
         // backgroundColor: '#E94E32',
+        /* .tbk-grey */
+        backgroundColor: '#6B7178',
         boxShadow: 'none',
         '&:hover': {
           boxShadow: 'none',
@@ -399,6 +403,7 @@ export default createTheme({
   whiteBasic: '#ffffff',
   trueblackBasic: '#000000',
   greenMain: '#3BC693',
+  blackGrey: '#111418',
   footerHeight: 72,
   mobileFooterHeight: 56,
   sidebarWidth: 300,

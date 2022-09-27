@@ -152,7 +152,7 @@ export function verifyToken(authToken: string, userId: string) {
           numberOfRatedSessions: jsonResponse.numberOfRatedSessions,
           areas: jsonResponse.areas,
           partnerRating: jsonResponse.partnerRatingRecap.average,
-
+          // dayAvailability:
         };
       }
     }

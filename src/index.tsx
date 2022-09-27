@@ -13,10 +13,13 @@ import PasswordResetPage from './components/LoginPage/PasswordReset';
 import PasswordResetInstructionsSent from './components/LoginPage/PasswordResetInstructionsSent';
 import PasswordResetNewPassword from './components/LoginPage/PasswordResetNewPassword';
 import MainPage from './components/MainPage/MainPage';
+import Month from './components/AvailabilityPicker/Month/Month';
+import AvailabilityPicker from './components/AvailabilityPicker/AvailabilityPicker';
 import AreasPage from './components/AreasPage/AreasPage';
 import SessionsPage from './components/SessionsPage/SessionsPage';
 import SessionDetails from './components/SessionDetails/SessionDetails';
 import RateSession from './components/RateSession/RateSession';
+// import RunningLatePopup from './components/RunningLatePopup/RunningLatePopup';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import theme from './theme';
 import './types';
@@ -25,6 +28,14 @@ import { ParticipantProvider } from './components/ParticipantProvider';
 import { VideoProvider } from './components/VideoProvider';
 import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
+
+import momentLocalizer from './components/AvailabilityPicker/momentLocalizer';
+import moment from 'moment';
+
+
+momentLocalizer();
+
+
 
 const VideoApp = () => {
   const { error, setError } = useAppState();
@@ -62,6 +73,9 @@ export const ReactApp = () => (
             <PrivateRoute path="/areas-page">
               <AreasPage />
             </PrivateRoute>
+            <PrivateRoute path="/availability-calendar">
+              <AvailabilityPicker />
+            </PrivateRoute>
             <PrivateRoute exact path="/sessions-page">
               <SessionsPage />
             </PrivateRoute>
@@ -71,6 +85,9 @@ export const ReactApp = () => (
             <Route exact path="/rate-session">
               <RateSession trainerName='Peter' />
             </Route>
+            {/*<Route exact path="/running-late">
+              <RunningLatePopup open onClose={() => {}} />
+            </Route>*/}
             <Route exact path="/password-reset">
               <PasswordResetPage />
             </Route>

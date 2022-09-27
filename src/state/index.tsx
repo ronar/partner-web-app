@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useState } from 'react';
-import { RecordingRules, RoomType, AuthToken, Booking, Areas } from '../types';
+import { RecordingRules, RoomType, AuthToken, Booking, Areas, DayAvailability } from '../types';
 import { TwilioError } from 'twilio-video';
 import { settingsReducer, initialSettings, Settings, SettingsAction } from './settings/settingsReducer';
 import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
@@ -34,6 +34,8 @@ export interface StateContextType {
   bookings?: Booking[];
   upcomingBookings?: Booking[] | null;
   inProgressBookings?: Booking[] | null;
+  dayAvailability?: DayAvailability[];
+  setDayAvailability: React.Dispatch<React.SetStateAction<DayAvailability[]>>;
   signIn?(email: string, password: string): Promise<void>;
   signOut?(): Promise<void>;
   isAuthReady?: boolean;
@@ -52,6 +54,8 @@ export interface StateContextType {
   stopSession(partnerId: string, bookingId: number): Promise<object>;
   declineSession(partnerId: string, bookingId: number): Promise<object>;
   cancelSession(partnerId: string, bookingId: number): Promise<object>;
+  getAvailability(partnerId: string): Promise<{ dayAvailability: object }>;
+  updateAvailability(partnerId: string, dayAvailability: DayAvailability[]): Promise<object>;
   isGalleryViewActive: boolean;
   setIsGalleryViewActive: React.Dispatch<React.SetStateAction<boolean>>;
   maxGalleryViewParticipants: number;
@@ -86,6 +90,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[] | null>([]);
   const [inProgressBookings, setInProgressBookings] = useState<Booking[] | null>([]);
+  const [dayAvailability, setDayAvailability] = useState<DayAvailability[]>([]);
   const [maxGalleryViewParticipants, setMaxGalleryViewParticipants] = useLocalStorageState(
     'max-gallery-participants-key',
     6
@@ -106,6 +111,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     bookings,
     upcomingBookings,
     inProgressBookings,
+    dayAvailability,
+    setDayAvailability,
     settings,
     dispatchSetting,
     roomType,
@@ -161,7 +168,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           .catch(err => setError(err));
       },
       // setRunningLate: async (partnerId, bookingId) => {
-      runningLate: async (partnerId: string, bookingId: number) => {
+      runningLate: async (partnerId: string, bookingId: number, delayInMinutes?: number) => {
         // POST /partners/{partnerId}/bookings/{bookingId}/running-late
         const endpointUrl = `${__API__}/partners/${partnerId}/bookings/${bookingId}/running-late`; //process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
 
@@ -173,7 +180,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
             'auth_token': token
           },
           body: JSON.stringify({
-            delayInMinutes: '15',
+            delayInMinutes: 15 || delayInMinutes || 15,
           }),
           method: 'POST',
         })
@@ -380,6 +387,92 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
               );
               cencelSessionError.code = jsonResponse.error?.message;
               return Promise.reject(cencelSessionError);
+            }
+
+            return jsonResponse;
+          })
+          .catch(err => setError(err));
+      },
+
+      getAvailability(partnerId: string) {
+        const endpointUrl = `${__API__}/partners/${partnerId}/availability`; //process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
+
+        const token = window.sessionStorage.getItem('auth_token') || '';
+
+        return fetch(endpointUrl, {
+          headers: {
+            'Content-Type': 'application/json',
+            'auth_token': token
+          },
+          // body: JSON.stringify({
+          // }),
+          // method: 'POST',
+        })
+          .then(async res => {
+            const jsonResponse = await res.json();
+
+            if (!res.ok) {
+              const getAvailabilityError = new Error(
+                jsonResponse.error?.message || 'There was an error loading the availability'
+              );
+              getAvailabilityError.code = jsonResponse.error?.message;
+              return Promise.reject(getAvailabilityError);
+            }
+
+            return jsonResponse;
+          })
+          .catch(err => setError(err));
+      },
+
+      /**
+       * In the following format
+       *  {
+       *    "dayAvailability": [
+       *      {
+       *        "day": "string",
+       *        "timeSlots": [
+       *          {
+       *            "startTime": "string"
+       *          }
+       *        ]
+       *      }
+       *    ]
+       *  }
+       */
+      updateAvailability(partnerId: string, dayAvailability: DayAvailability[]) {
+        const endpointUrl = `${__API__}/partners/${partnerId}/availability`; //process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
+
+        const token = window.sessionStorage.getItem('auth_token') || '';
+
+        if (!dayAvailability) {
+          return Promise.reject();
+        }
+
+        return fetch(endpointUrl, {
+          headers: {
+            'Content-Type': 'application/json',
+            'auth_token': token
+          },
+          body: JSON.stringify({
+            dayAvailability
+            // dayAvailability.map(v => {
+            //   return {
+            //     day: v.day,
+            //     timeSlots: v.timeSlots.map(ts => ({ startTime: ts.startTime }))
+            //   };
+            // })
+          }),
+          method: 'POST',
+        })
+          .then(async res => {
+            const jsonResponse = await res.json();
+
+            if (!res.ok) {
+              const updateAvailabilityError = new Error(
+                jsonResponse.error?.message || 'There was an error updating the availability'
+              );
+              updateAvailabilityError.code = jsonResponse.error?.message;
+              return Promise.reject(updateAvailabilityError);
             }
 
             return jsonResponse;
@@ -595,11 +688,11 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
-  const runningLate: StateContextType['runningLate'] = (partnerId: string, bookingId: number) => {
+  const runningLate: StateContextType['runningLate'] = (partnerId: string, bookingId: number, delayInMinutes?: number) => {
   // const runningLate: StateContextType['setRunningLate'] = (partnerId: string, bookingId: number) => {
     setIsFetching(true);
     return contextValue
-      .runningLate(partnerId, bookingId)
+      .runningLate(partnerId, bookingId, delayInMinutes)
       .then(res => {
         setIsFetching(false);
         return res;
@@ -689,6 +782,37 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
+  const getAvailability: StateContextType['getAvailability'] = (partnerId: string) => {
+    setIsFetching(true);
+    return contextValue
+      .getAvailability(partnerId)
+      .then(res => {
+        setDayAvailability(res.dayAvailability as DayAvailability[]);
+        setIsFetching(false);
+        return res;
+      })
+      .catch(err => {
+        setError(err);
+        setIsFetching(false);
+        return Promise.reject(err);
+      });
+  };
+
+  const updateAvailability: StateContextType['updateAvailability'] = (partnerId: string, dayAvailability: DayAvailability[]) => {
+    setIsFetching(true);
+    return contextValue
+      .updateAvailability(partnerId, dayAvailability)
+      .then(res => {
+        setIsFetching(false);
+        return res;
+      })
+      .catch(err => {
+        setError(err);
+        setIsFetching(false);
+        return Promise.reject(err);
+      });
+  };
+
 
   // const signIn: StateContextType['signIn'] = (email, password) => {
   //   setIsFetching(true);
@@ -720,6 +844,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
         stopSession,
         declineSession,
         cancelSession,
+        getAvailability,
+        updateAvailability,
       }}
     >
       {props.children}

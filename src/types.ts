@@ -158,3 +158,15 @@ export interface BookingOptions {
   // tracks?: Array<LocalTrack | MediaStreamTrack>;
   // video?: boolean | CreateLocalTrackOptions;
 }
+
+export type TimeSlot = {
+  endTime?: string;
+  slotType?: 'UNAVAILABLE' | 'AVAILABLE' | 'IS_NOT_AVAILABLE_FOR_BOOKING' | 'IN_SESSION';
+  startTime: string;
+}
+
+export type DayAvailability = {
+  allDay: boolean;
+  day: string;
+  timeSlots: TimeSlot[];
+}

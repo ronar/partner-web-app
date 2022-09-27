@@ -48,6 +48,7 @@ import ContactSupportDialog from '../ContactSupportDialog/ContactSupportDialog';
 // import SessionOnlineListItemIcon from './SessionOnlineListItemIcon';
 
 import { copy } from '../../utils';
+import ics from '../../lib/icsFormatter';
 // import { copy } from '../../../utils';
 import { CALENDAR_FORMATS } from '../../constants';
 
@@ -232,13 +233,14 @@ interface SessionDetailsProps {
   status: string;
   declineStatus: boolean;
   sessionType: string;
+  culture?: string;
   onClick(e: MouseEvent<HTMLButtonElement>): void;
   onRunningLateClick(e: MouseEvent<HTMLButtonElement>, delayInMinutes?: number): void;
   onDeclineSessionClick(): void;
   onClose(): void;
 }
 
-export default function SessionDetails({ booking, sessionType, declineStatus, onRunningLateClick, onDeclineSessionClick, onClick, onClose }: PropsWithChildren<SessionDetailsProps>) {
+export default function SessionDetails({ booking, sessionType, declineStatus, culture, onRunningLateClick, onDeclineSessionClick, onClick, onClose }: PropsWithChildren<SessionDetailsProps>) {
   const classes = useStyles();
   const {
     signIn,
@@ -302,6 +304,28 @@ export default function SessionDetails({ booking, sessionType, declineStatus, on
     if (copy(booking?.roomUrl)) {
 
     }
+  }, [booking]);
+
+  const handleAddToCalClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    const { location } = booking;
+    var workoutAddress;
+
+      // setAddress(address.fullAddress(true));
+
+    // if (location) {
+    workoutAddress = new Address(booking?.location);
+    // }
+
+    const title = `Your ${booking?.product?.labels?.displayName} session with ${booking?.user?.firstName}`;
+    const place = workoutAddress && workoutAddress.fullAddress().replace(/,/g, '\\,') || '';
+    const begin = new Date(booking?.startTime);
+    const end = moment(begin.getTime(), culture).add(1, 'h').toDate();
+
+    const description = booking?.preferences?.notes || '';
+
+    ics?.removeAllEvents();
+    ics?.addEvent(title, description, place, begin.toUTCString(), end.toUTCString());
+    ics?.download('calendar');
   }, [booking]);
 
   const handleLocationOpenClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
@@ -657,7 +681,7 @@ export default function SessionDetails({ booking, sessionType, declineStatus, on
 
       <Container maxWidth="sm" disableGutters className={classes.gutterBottomFull}>
         <List component="nav" aria-label="mailbox folders" className={classes.gutterBottomBase}>
-          <ListItem button divider style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <ListItem button divider style={{ paddingLeft: 0, paddingRight: 0 }} onClick={handleAddToCalClick}>
             <Box
               display="flex"
               alignItems="center"

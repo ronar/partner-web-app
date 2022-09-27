@@ -42,6 +42,7 @@ import CopyIcon from '../../icons/CopyIcon';
 import BottomNavigation from '../BottomNavigation/BottomNavigation';
 
 import RateSessionDialog from '../RateSessionDialog/RateSessionDialog';
+import ContactSupportDialog from '../ContactSupportDialog/ContactSupportDialog';
 
 // import SessionInPersonListItemIcon from './SessionInPersonListItemIcon';
 // import SessionOnlineListItemIcon from './SessionOnlineListItemIcon';
@@ -103,6 +104,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   gutterTopFull: {
     marginTop: 64
   },
+  gutterBottomFull: {
+    marginBottom: 64
+  },
   gutterBottomExtraExtraLarge: {
     marginBottom: 80
   },
@@ -162,6 +166,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '0',
     padding: '0',
   },
+  declineButton: {
+    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'center',
+    background: 'transparent',
+    border: '0',
+    padding: '0',
+    width: '100%',
+    textTransform: 'initial',
+  },
 
   buttonsDuet: {
     cursor: 'pointer',
@@ -216,13 +230,15 @@ interface SessionDetailsProps {
   // open: boolean;
   booking: Booking;
   status: string;
+  declineStatus: boolean;
   sessionType: string;
   onClick(e: MouseEvent<HTMLButtonElement>): void;
   onRunningLateClick(e: MouseEvent<HTMLButtonElement>, delayInMinutes?: number): void;
+  onDeclineSessionClick(): void;
   onClose(): void;
 }
 
-export default function SessionDetails({ booking, sessionType, onRunningLateClick, onClick, onClose }: PropsWithChildren<SessionDetailsProps>) {
+export default function SessionDetails({ booking, sessionType, declineStatus, onRunningLateClick, onDeclineSessionClick, onClick, onClose }: PropsWithChildren<SessionDetailsProps>) {
   const classes = useStyles();
   const {
     signIn,
@@ -240,6 +256,7 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
   const [password, setPassword] = useState('');
   const [passcode, setPasscode] = useState('');
   const [rateSessionOpen, setRateSessionOpen] = useState(false);
+  const [ contactSupportDialogOpen, setContactSupportDialogOpen ] = useState(false);
   const [address, setAddress] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
 
@@ -379,10 +396,11 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
     </Box>
 
     <RoundedContainer
-      style={{ height: 'calc(100% - 50px)' }}
+      style={{ height: 'calc(100% - 50px)', backgroundColor: 'white' }}
       innerContainerStyle={{ maxHeight: 'calc(100% + 8px)', paddingBottom: 24, overflow: 'scroll' }}
     >
 
+      {booking ? (
       <div
         style={{
           paddingBottom: booking?.status === 'IN_PROGRESS' ? 128 : 112
@@ -637,7 +655,7 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
       </GreyRoundedBox>
 
 
-      <Container maxWidth="sm" disableGutters className={classes.gutterBottom}>
+      <Container maxWidth="sm" disableGutters className={classes.gutterBottomFull}>
         <List component="nav" aria-label="mailbox folders" className={classes.gutterBottomBase}>
           <ListItem button divider style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Box
@@ -653,7 +671,7 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
               </Box>
             </Box>
           </ListItem>
-          <ListItem button style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <ListItem button style={{ paddingLeft: 0, paddingRight: 0 }} onClick={() => setContactSupportDialogOpen(true)}>
             <Box
               display="flex"
               alignItems="center"
@@ -686,17 +704,23 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
           </>
         )}
 
-        {booking?.status === 'HAS_A_PARTNER' && (
-          <Typography
-            variant="subtitle1"
-            color="primary"
-            className={clsx(classes.gutterTopFull, classes.gutterBottomExtraLarge, classes.linkLikeButton, classes.greyColor)}
-            style={{
-              textAlign: 'center',
-            }}
+        {booking?.status === 'HAS_A_PARTNER' && !declineStatus && (
+          <button
+            className={clsx(classes.declineButton, classes.gutterTopFull, classes.gutterBottomExtraLarge)}
+            onClick={onDeclineSessionClick}
           >
-              Need to decline the session?
-          </Typography>
+
+            <Typography
+              variant="subtitle1"
+              color="primary"
+              className={clsx(classes.linkLikeButton, classes.greyColor)}
+              style={{
+                textAlign: 'center',
+              }}
+            >
+                Need to decline the session?
+            </Typography>
+          </button>
         )}
 
         {booking?.status === 'HAS_A_PARTNER' && (
@@ -714,7 +738,81 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
             Running late?
           </Button>
         )}
-      </div>
+      </div>) : (
+        <>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={7}
+        >
+          <UserPlaceholder />
+          <Box
+            flexGrow="1"
+            ml={1}
+            style={{
+              width: '100%',
+              height: '64px',
+              backgroundColor: '#f8f8f8',
+              borderRadius: 8
+            }}
+          >
+          </Box>
+
+        </Box>
+        <Box
+          flexGrow="1"
+          mb={2}
+          style={{
+            width: '100%',
+            height: '80px',
+            backgroundColor: '#f8f8f8',
+            borderRadius: 8
+          }}
+        >
+        </Box>
+        <Box
+          display="flex"
+          flexGrow="1"
+          mb={2}
+          style={{
+            gap: '15px'
+          }}
+        >
+          <Box
+            flexGrow="1"
+            style={{
+              width: '100%',
+              height: '164px',
+              backgroundColor: '#f8f8f8',
+              borderRadius: 8
+            }}
+          >
+          </Box>
+          <Box
+            flexGrow="1"
+            style={{
+              width: '100%',
+              height: '164px',
+              backgroundColor: '#f8f8f8',
+              borderRadius: 8
+            }}
+          >
+          </Box>
+        </Box>
+
+        <Box
+          flexGrow="1"
+          style={{
+            width: '100%',
+            height: '80px',
+            backgroundColor: '#f8f8f8',
+            borderRadius: 8
+          }}
+        >
+        </Box>
+      </>
+      )}
 
 
 {/* Medium Grey */}
@@ -785,6 +883,7 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
 
       {(cancelledByCustomer || booking?.status === 'HAS_A_PARTNER' || booking?.status === 'IN_PROGRESS') && (
         <Container maxWidth="xs" className={classes.bottomCtaContainer} disableGutters >
+          {booking ? (
           <Box
             pt={booking?.status === 'IN_PROGRESS' ? 1 : 2}
             pb={2}
@@ -825,7 +924,32 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
                 </Button>
               )}
             </Grid>
+          </Box>) : (
+          <Box
+            pt={2}
+            pb={2}
+            px={2}
+            sx={{
+              padding: "16px"
+            }}
+            textAlign="center"
+            // position='fixed'
+            style={{
+              backgroundColor: '#ffffff'
+            }}
+          >
+            <Box
+              flexGrow="1"
+              style={{
+                width: '100%',
+                height: '64px',
+                backgroundColor: '#CBCFD5',
+                borderRadius: 8
+              }}
+            >
+            </Box>
           </Box>
+          )}
         </Container>
       )}
     </RoundedContainer>
@@ -836,6 +960,10 @@ export default function SessionDetails({ booking, sessionType, onRunningLateClic
         setRateSessionOpen(false);
         // setMenuOpen(false);
       }}
+    />
+    <ContactSupportDialog
+      open={contactSupportDialogOpen}
+      onClose={() => setContactSupportDialogOpen(false)}
     />
     </>
   );

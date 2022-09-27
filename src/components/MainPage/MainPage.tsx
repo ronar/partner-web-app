@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useEffect, FormEvent } from 'react';
+import React, { ChangeEvent, useState, useEffect, useCallback, FormEvent } from 'react';
 import clsx from 'clsx';
 import { useAppState } from '../../state';
 
@@ -27,6 +27,7 @@ import ArrowRightIcon from '../../icons/ArrowRightIcon';
 
 import SessionHelper from '../SessionHelper/SessionHelper';
 import BottomNavigation from '../BottomNavigation/BottomNavigation';
+import ContactSupportDialog from '../ContactSupportDialog/ContactSupportDialog';
 
 import { PartnerRating } from '../PartnerRating/PartnerRating';
 
@@ -185,6 +186,7 @@ export default function MainPage() {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
   const [sessionInProgress, setSessionInProgress] = useState(false);
+  const [ contactSupportDialogOpen, setContactSupportDialogOpen ] = useState(false);
 
   const isAuthEnabled = true; // Boolean(process.env.REACT_APP_SET_AUTH);
 
@@ -232,6 +234,10 @@ export default function MainPage() {
     // console.log('Box click');
     // console.log(event);
   };
+
+  const handleTermsClick = useCallback(() => {
+    window.location.href = 'https://trubeapp.com/terms/partner-app.html';
+  }, []);
 
   const sessionHelperShowed = inProgressBookings && inProgressBookings.length ||
     upcomingBookings && upcomingBookings.length;
@@ -396,7 +402,7 @@ export default function MainPage() {
 
         <Container maxWidth="sm" disableGutters>
         <List component="nav" aria-label="mailbox folders">
-          <ListItem button style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <ListItem button style={{ paddingLeft: 0, paddingRight: 0 }} onClick={() => setContactSupportDialogOpen(true)}>
             <Box
               display="flex"
               alignItems="center"
@@ -411,7 +417,7 @@ export default function MainPage() {
             </Box>
           </ListItem>
           <Divider />
-          <ListItem button divider style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <ListItem button divider style={{ paddingLeft: 0, paddingRight: 0 }} onClick={handleTermsClick}>
             <Box
               display="flex"
               alignItems="center"
@@ -461,6 +467,11 @@ export default function MainPage() {
       </Grid>
 
       </Box>
+
+      <ContactSupportDialog
+        open={contactSupportDialogOpen}
+        onClose={() => setContactSupportDialogOpen(false)}
+      />
 
       {sessionHelperShowed && (
         <SessionHelper

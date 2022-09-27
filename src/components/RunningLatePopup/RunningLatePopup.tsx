@@ -161,6 +161,14 @@ export default function RunningLatePopup({ open, onClose, onSubmit }: { open: bo
     []
   );
 
+  const handleCtaClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+    // onClose();
+    onSubmit(e, activeButton === 0 ? 5 : activeButton === 1 ? 10 : 20);
+    },
+    [onClose, onSubmit]
+  );
+
   // const handleChange = useCallback(
   //   (e: React.ChangeEvent<{ value: unknown; name?: string }>) => {
   //     dispatchSetting({ name: e.target.name as keyof Settings, value: e.target.value as string });
@@ -367,8 +375,8 @@ export default function RunningLatePopup({ open, onClose, onSubmit }: { open: bo
                 className={clsx(classes.button, classes.gutterBottom)}
                 color="primary"
                 variant="contained"
-                disabled={!activeButton}
-                onClick={onSubmit}
+                disabled={!activeButton && activeButton !== 0}
+                onClick={handleCtaClick}
               >
                 Send
               </Button>

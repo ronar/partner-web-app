@@ -25,6 +25,8 @@ import SlidingUpPanel from 'rn-sliding-up-panel';
 
 import SessionDetails from '../SessionDetails/SessionDetails';
 import RunningLatePopup from '../RunningLatePopup/RunningLatePopup';
+import RunningLateSuccessDialog from './RunningLateSuccessDialog/RunningLateSuccessDialog';
+import DeclineSessionDialog from './DeclineSessionDialog/DeclineSessionDialog';
 
 import LocationIcon from '../../icons/LocationIcon';
 import ArrowRightIcon from '../../icons/ArrowRightIcon';
@@ -160,6 +162,7 @@ export default function SessionsPage() {
     getUpcomingBookings,
     isAuthReady,
     runningLate,
+    declineSession,
   } = useAppState();
   const history = useHistory();
   const location = useLocation<{ from: Location }>();
@@ -172,6 +175,9 @@ export default function SessionsPage() {
   const [bookingStatus, setBookingStatus] = useState('HAS_A_PARTNER');
   const [sessionType, setSessionType] = useState('');
   const [ runningLatePopupOpen, setRunningLatePopupOpen ] = useState(false);
+  const [ runningLateSuccessOpen, setRunningLateSuccessOpen ] = useState(false);
+  const [ declineSessionDialogOpen, setDeclineSessionDialogOpen ] = useState(false);
+  const [ declineSuccess, setDeclineSuccess] = useState(false);
   const [authError, setAuthError] = useState<Error | null>(null);
 
   const isAuthEnabled = true; // Boolean(process.env.REACT_APP_SET_AUTH);
@@ -199,6 +205,12 @@ export default function SessionsPage() {
        panelRef.current && panelRef.current.show();
     }
   }, [bookingId, booking]);
+
+  // useEffect(() => {
+  //   if (!declineSessionDialogOpen) {
+  //     setDeclineSuccess(false); // Reset state
+  //   }
+  // }, [declineSessionDialogOpen]);
 
 
 
@@ -249,12 +261,32 @@ export default function SessionsPage() {
   const handleRunningLateClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     setRunningLatePopupOpen(true);
 
-    history.push({ pathname: '/sessions-page' });
-  }, [history, setRunningLatePopupOpen]);
+    // history.push({ pathname: '/sessions-page' });
+  }, [setRunningLatePopupOpen]);
 
   const handleRunningLateSubmit = useCallback((e: MouseEvent<HTMLButtonElement>, delayInMinutes?: number) => {
     if (user && booking) {
-      runningLate(user?.id!, booking?.id!, delayInMinutes);
+      runningLate(user?.id!, booking?.id!, delayInMinutes)
+        .then(() => {
+          setRunningLateSuccessOpen(true);
+        });
+
+      // onRunningLateClick && onRunningLateClick();
+    }
+  }, [user, booking, setRunningLateSuccessOpen]);
+
+  const handleDeclineSessionClick = useCallback(() => {
+    setDeclineSessionDialogOpen(true);
+
+    // history.push({ pathname: '/sessions-page' });
+  }, [setDeclineSessionDialogOpen]);
+
+  const handleDecline = useCallback(() => {
+    if (user && booking) {
+      declineSession(user?.id!, booking?.id!)
+        .then(() => {
+          setDeclineSuccess(true);
+        });
 
       // onRunningLateClick && onRunningLateClick();
     }
@@ -426,13 +458,15 @@ export default function SessionsPage() {
       // height={booking && booking?.product?.id?.includes('_LS') ? 1165 : 1330}
       height={height - 24 /*807*/}
     >
-      {bookingId && booking ? (
+      {bookingId ? (
       <div style={styles.container}>
         <SessionDetails
           booking={booking}
           status={bookingStatus}
+          declineStatus={declineSuccess}
           sessionType={sessionType}
           onRunningLateClick={handleRunningLateClick}
+          onDeclineSessionClick={handleDeclineSessionClick}
           onClick={handleCtaClick}
           onClose={handleSessionDetailsPopupClose}
         />
@@ -443,6 +477,24 @@ export default function SessionsPage() {
       open={runningLatePopupOpen}
       onClose={handleRunningLatePopupClose}
       onSubmit={handleRunningLateSubmit}
+    />
+    <RunningLateSuccessDialog
+      open={runningLateSuccessOpen}
+      onClose={() => {
+        setRunningLateSuccessOpen(false);
+        setRunningLatePopupOpen(false);
+        // setMenuOpen(false);
+      }}
+    />
+    <DeclineSessionDialog
+      open={declineSessionDialogOpen}
+      success={declineSuccess}
+      onConfirm={handleDecline}
+      onClose={() => {
+        // setRunningLateSuccessOpen(false);
+        setDeclineSessionDialogOpen(false);
+        // setMenuOpen(false);
+      }}
     />
     </>
   );

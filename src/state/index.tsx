@@ -339,6 +339,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
 
         const token = window.sessionStorage.getItem('auth_token') || '';
 
+        return Promise.resolve();
+
         return fetch(endpointUrl, {
           headers: {
             'Content-Type': 'application/json',

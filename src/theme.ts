@@ -19,6 +19,7 @@ declare module '@material-ui/core/styles/createTheme' {
     greyMain: string;
     greyLight: string;
     greenMain: string;
+    greenLight: string;
     blackGrey: string;
     red: string;
     footerHeight: number;
@@ -42,6 +43,7 @@ declare module '@material-ui/core/styles/createTheme' {
     greyMain: string;
     greyLight: string;
     greenMain: string;
+    greenLight: string;
     blackGrey: string;
     red: string;
     footerHeight: number;
@@ -403,6 +405,7 @@ export default createTheme({
   whiteBasic: '#ffffff',
   trueblackBasic: '#000000',
   greenMain: '#3BC693',
+  greenLight: '#61d2a8',
   blackGrey: '#111418',
   footerHeight: 72,
   mobileFooterHeight: 56,

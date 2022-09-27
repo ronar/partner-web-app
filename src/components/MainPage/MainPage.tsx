@@ -28,6 +28,7 @@ import ArrowRightIcon from '../../icons/ArrowRightIcon';
 import SessionHelper from '../SessionHelper/SessionHelper';
 import BottomNavigation from '../BottomNavigation/BottomNavigation';
 import ContactSupportDialog from '../ContactSupportDialog/ContactSupportDialog';
+import AppFeedbackPopup from '../AppFeedbackPopup/AppFeedbackPopup';
 
 import { PartnerRating } from '../PartnerRating/PartnerRating';
 
@@ -187,6 +188,7 @@ export default function MainPage() {
   const [authError, setAuthError] = useState<Error | null>(null);
   const [sessionInProgress, setSessionInProgress] = useState(false);
   const [ contactSupportDialogOpen, setContactSupportDialogOpen ] = useState(false);
+  const [ appFeedbackPopupOpen, setAppFeedbackPopupOpen ] = useState(false);
 
   const isAuthEnabled = true; // Boolean(process.env.REACT_APP_SET_AUTH);
 
@@ -431,7 +433,7 @@ export default function MainPage() {
               </Box>
             </Box>
           </ListItem>
-          <ListItem button style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <ListItem button style={{ paddingLeft: 0, paddingRight: 0 }} onClick={() => setAppFeedbackPopupOpen(true)}>
             <Box
               display="flex"
               alignItems="center"
@@ -471,6 +473,11 @@ export default function MainPage() {
       <ContactSupportDialog
         open={contactSupportDialogOpen}
         onClose={() => setContactSupportDialogOpen(false)}
+      />
+
+      <AppFeedbackPopup
+        open={appFeedbackPopupOpen}
+        onClose={() => setAppFeedbackPopupOpen(false)}
       />
 
       {sessionHelperShowed && (

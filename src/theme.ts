@@ -218,6 +218,29 @@ export default createTheme({
           }
         },
       },
+      outlinedSecondary: {
+        padding: '19px 14px',
+        // color: '#E94E32',
+        color: '#6B7178',
+        backgroundColor: 'transparent',
+        // border: '2px solid #E94E32', //'2px solid #027AC5',
+        border: '2px solid #6B7178', //'2px solid #027AC5',
+        label: {
+          // color: '#E94E32',
+          color: '#6B7178',
+        },
+        '& .MuiButton-label': {
+          // color: '#E94E32',
+          color: '#6B7178',
+        },
+        '&:hover': {
+          backgroundColor: '#F1644A',
+          border: '2px solid #F1644A', // '2px solid rgb(1, 85, 137)',
+          '& .MuiButton-label': {
+            color: '#FFFFFF',
+          }
+        },
+      },
       startIcon: {
         marginRight: '6px',
       },

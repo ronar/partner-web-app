@@ -20,6 +20,8 @@ import SessionsPage from './components/SessionsPage/SessionsPage';
 import SessionDetails from './components/SessionDetails/SessionDetails';
 import RateSession from './components/RateSession/RateSession';
 // import RunningLatePopup from './components/RunningLatePopup/RunningLatePopup';
+import AppFeedbackPopup from './components/AppFeedbackPopup/AppFeedbackPopup';
+
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import theme from './theme';
 import './types';
@@ -88,6 +90,10 @@ export const ReactApp = () => (
             {/*<Route exact path="/running-late">
               <RunningLatePopup open onClose={() => {}} />
             </Route>*/}
+            <Route exact path="/app-feedback">
+              <AppFeedbackPopup open onClose={() => {}} />
+            </Route>
+
             <Route exact path="/password-reset">
               <PasswordResetPage />
             </Route>

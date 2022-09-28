@@ -203,7 +203,6 @@ export default function SessionsPage() {
 
   useEffect(() => {
     if (bookingId && booking) {
-      setIsOpen(true);
       panelRef.current && panelRef.current.show();
     }
   }, [bookingId, booking]);
@@ -249,10 +248,13 @@ export default function SessionsPage() {
     return (e: MouseEvent<HTMLInputElement>) => {
       e.preventDefault() // we can all this directly here now!
 
-      history.replace({ pathname: `/sessions-page/${bookingId}` });
+      setIsOpen(true);
+
       panelRef.current && panelRef.current.show();
+
+      history.replace({ pathname: `/sessions-page/${bookingId}` });
     }
-  }, [history]);
+  }, [history, setIsOpen]);
 
   const handleSessionDetailsPopupClose = useCallback(() => {
     panelRef.current && panelRef.current.hide();
@@ -263,7 +265,7 @@ export default function SessionsPage() {
   const handleBottomReached = useCallback(() => {
     // panelRef.current && panelRef.current.hide();
     setIsOpen(false);
-  }, []);
+  }, [setIsOpen]);
 
   const handleRunningLateClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     setRunningLatePopupOpen(true);
@@ -465,7 +467,7 @@ export default function SessionsPage() {
       // height={booking && booking?.product?.id?.includes('_LS') ? 1165 : 1330}
       height={height - 24 /*807*/}
     >
-      {bookingId && isOpen ? (
+      {(bookingId && isOpen) ? (
       <div style={styles.container}>
         <SessionDetails
           booking={booking}

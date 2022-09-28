@@ -22,7 +22,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import SlidingUpPanel from 'rn-sliding-up-panel';
-import AddArea from '../AddArea/AddArea';
+import AvailabilityPicker from '../AvailabilityPicker/AvailabilityPicker';
 
 import LocationIcon from '../../icons/LocationIcon';
 import ArrowRightIcon from '../../icons/ArrowRightIcon';
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   addAreaCtaButton: {
-    marginBottom: 16,
+    marginBottom: 8,
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
@@ -146,7 +146,7 @@ interface AreasPageProps {
 
 const height = getViewportHeight();
 
-export default function AreasPage() {
+export default function AvailabilityCalendarPage() {
   const classes = useStyles();
   const { signIn, user, isAuthReady } = useAppState();
   const history = useHistory();
@@ -191,58 +191,20 @@ export default function AreasPage() {
     <>
     <Container>
       <Typography variant="h2" className={clsx(classes.gutterTopDoubleMedium, classes.gutterBottomDoubleMedium, classes.greyMainColor)}>
-        AREAS COVERED
+        Availability Calendar
       </Typography>
     </Container>
     <RoundedContainer>
 
-    <Typography variant="h3" className={clsx(classes.gutterBottom, classes.greyColor)}>
+    {/*<Typography variant="h3" className={clsx(classes.gutterBottom, classes.greyColor)}>
         {userAreas.length} postcodes covered:
-    </Typography>
+    </Typography>*/}
 
-      <Container maxWidth="sm" disableGutters>
-        <List component="nav" aria-label="mailbox folders" disablePadding className={classes.gutterBottomExtraExtraLarge}>
-          {userAreas.map(area => (
-            <>
-            <ListItem button style={{ paddingLeft: 0, paddingRight: 0 }}>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                flex="1"
-              >
-                <ListItemIcon
-                  classes={{
-                    root: classes.root,
-                  }}
-                >
-                  <LocationIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primaryTypographyProps={{
-                    variant: "button",
-                    display: "inline",
-                    color: "primary"
-                  }}
-                  secondaryTypographyProps={{
-                    variant: "subtitle1",
-                    display: "inline",
-                    color: "primary"
-                  }}
-                  primary={`${area?.outward}, `}
-                  secondary={area?.town}
-                  style={{ marginLeft: 16 }}
-                />
-              </Box>
-            </ListItem>
-            <Divider />
-            </>
-          ))}
-          <Divider light />
-        </List>
+      <Container maxWidth="sm" disableGutters style={{ marginBottom: '32px' }}>
+        <AvailabilityPicker />
       </Container>
 
-      <Grid container justifyContent="flex-end">
+      {/*<Grid container justifyContent="flex-end">
         <Button
           variant="contained"
           color="primary"
@@ -254,7 +216,7 @@ export default function AreasPage() {
           <PlusIcon />
           Add Area
         </Button>
-      </Grid>
+      </Grid>*/}
 
 
       {/*<form onSubmit={handleSubmit}>
@@ -306,25 +268,6 @@ export default function AreasPage() {
     </RoundedContainer>
     <BottomNavigation />
 
-    <SlidingUpPanel
-      ref={panelRef}
-      draggableRange={{ top: height - 24/*780*/, bottom: 0 }}
-      snappingPoints={[ 118, 500 ]}
-      // // onDragStart={ (position) => { this.setState({ isDragged: true }); } }
-      // // onDragEnd={ (position) => { this.setState({ isDragged: false }); } }
-      // onBottomReached={handleBottomReached}
-      // onFullyOpen={ () => setIsFullyOpen(true) }
-      // //snappingPoints={[panelExpandedY]}
-      backdropStyle={panelStyles.backdrop}
-      containerStyle={panelStyles.container}
-      height={height - 24 /*807*/}
-      friction={0.7}
-    >
-      {/*<div style={panelStyles.container}>*/}
-      <div style={styles.container}>
-        <AddArea onClose={() => panelRef.current && panelRef.current.hide()} />
-      </div>
-    </SlidingUpPanel>
 
     </>
   );

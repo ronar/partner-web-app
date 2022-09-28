@@ -172,6 +172,7 @@ export default function SessionsPage() {
   const [passcode, setPasscode] = useState('');
   // const [booking, setBooking] = useState(null);
   const [bookingId, setBookingId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [bookingStatus, setBookingStatus] = useState('HAS_A_PARTNER');
   const [sessionType, setSessionType] = useState('');
   const [ runningLatePopupOpen, setRunningLatePopupOpen ] = useState(false);
@@ -202,7 +203,8 @@ export default function SessionsPage() {
 
   useEffect(() => {
     if (bookingId && booking) {
-       panelRef.current && panelRef.current.show();
+      setIsOpen(true);
+      panelRef.current && panelRef.current.show();
     }
   }, [bookingId, booking]);
 
@@ -257,6 +259,11 @@ export default function SessionsPage() {
 
     history.push({ pathname: '/sessions-page' });
   }, [history]);
+
+  const handleBottomReached = useCallback(() => {
+    // panelRef.current && panelRef.current.hide();
+    setIsOpen(false);
+  }, []);
 
   const handleRunningLateClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     setRunningLatePopupOpen(true);
@@ -321,7 +328,7 @@ export default function SessionsPage() {
         Upcoming sessions
       </Typography>
     </Container>
-    <RoundedContainer>
+    <RoundedContainer innerContainerStyle={{ height: '100%' }}>
 
     {/*<Typography variant="h3" className={clsx( classes.gutterBottom, classes.greyColor)}>
         4 postcodes covered:
@@ -450,7 +457,7 @@ export default function SessionsPage() {
       snappingPoints={[ 118, 660 ]}
       // // onDragStart={ (position) => { this.setState({ isDragged: true }); } }
       // // onDragEnd={ (position) => { this.setState({ isDragged: false }); } }
-      // onBottomReached={handleBottomReached}
+      onBottomReached={handleBottomReached}
       // onFullyOpen={ () => setIsFullyOpen(true) }
       // //snappingPoints={[panelExpandedY]}
       backdropStyle={panelStyles.backdrop}
@@ -458,7 +465,7 @@ export default function SessionsPage() {
       // height={booking && booking?.product?.id?.includes('_LS') ? 1165 : 1330}
       height={height - 24 /*807*/}
     >
-      {bookingId ? (
+      {bookingId && isOpen ? (
       <div style={styles.container}>
         <SessionDetails
           booking={booking}

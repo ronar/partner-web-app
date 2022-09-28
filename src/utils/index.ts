@@ -50,6 +50,16 @@ export function getViewportHeight() {
 
   return vh;
 }
+export function getDimentions() {
+  var w = window,
+    d = document,
+    docElem = d.documentElement,
+    body = d.getElementsByTagName('body')[0],
+    width = w.innerWidth || docElem.clientWidth || body.clientWidth,
+    height = w.innerHeight || docElem.clientHeight || body.clientHeight;
+
+  return { width, height };
+}
 
 
 // This function will return 'true' when the specified permission has been denied by the user.

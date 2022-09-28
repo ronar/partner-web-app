@@ -402,7 +402,9 @@ class AvailabilityTimePickerView extends React.Component {
     var start = dates.startOf(selectedDay, 'day');
     var startDay = dates.date(selectedDay); // get day
 
-    while (dates.date(start) === startDay) {
+    start = dates.add(start, 330, 'minutes');
+
+    while (dates.date(start) === startDay && dates.lte(start, dates.add(dates.endOf(start, 'day'),　-30 /* 23 hr is the max available time */, 'minutes'))) {
         let found = null;
         let disabled = false;
 
@@ -689,7 +691,7 @@ class AvailabilityTimePickerView extends React.Component {
                 <CloseIcon />
               </Box>
               <Typography variant="button">
-                Close {this.state.isAllDay ? 'true' : 'false'}
+                Close
               </Typography>
             </Button>
           </Box>

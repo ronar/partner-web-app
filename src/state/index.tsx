@@ -56,6 +56,9 @@ export interface StateContextType {
   cancelSession(partnerId: string, bookingId: number): Promise<object>;
   getAvailability(partnerId: string): Promise<{ dayAvailability: object }>;
   updateAvailability(partnerId: string, dayAvailability: DayAvailability[]): Promise<object>;
+  recoverPassword(email: string): Promise<object>;
+  code?: number | string;
+  passwordReset: boolean;
   isGalleryViewActive: boolean;
   setIsGalleryViewActive: React.Dispatch<React.SetStateAction<boolean>>;
   maxGalleryViewParticipants: number;
@@ -91,6 +94,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[] | null>([]);
   const [inProgressBookings, setInProgressBookings] = useState<Booking[] | null>([]);
   const [dayAvailability, setDayAvailability] = useState<DayAvailability[]>([]);
+  const [passwordReset, setPasswordReset] = useState<boolean>(false);
+  const [code, setCode] = useState<number | string | null>(null);
   const [maxGalleryViewParticipants, setMaxGalleryViewParticipants] = useLocalStorageState(
     'max-gallery-participants-key',
     6
@@ -116,6 +121,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     settings,
     dispatchSetting,
     roomType,
+    code,
+    passwordReset,
     isGalleryViewActive,
     setIsGalleryViewActive,
     maxGalleryViewParticipants,
@@ -339,8 +346,6 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
 
         const token = window.sessionStorage.getItem('auth_token') || '';
 
-        return Promise.resolve();
-
         return fetch(endpointUrl, {
           headers: {
             'Content-Type': 'application/json',
@@ -481,6 +486,38 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           })
           .catch(err => setError(err));
       },
+
+      /* Customer recovers password */
+      recoverPassword(email: string) {
+        const endpointUrl = `${__API__}/users/forgotten-password`; //process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
+
+        window.sessionStorage.setItem('password_recovery_email', email);
+
+        return fetch(endpointUrl, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email
+          }),
+          method: 'POST',
+        })
+          .then(async res => {
+            const jsonResponse = await res.json();
+
+            if (!res.ok) {
+              const updateAvailabilityError = new Error(
+                jsonResponse.error?.message || 'There was an error updating the availability'
+              );
+              updateAvailabilityError.code = jsonResponse.error?.message;
+              return Promise.reject(updateAvailabilityError);
+            }
+
+            return jsonResponse;
+          })
+          .catch(err => setError(err));
+      },
+
 
       // public Booking stopSession(Partner partner) {
       //     PartnerStopSessionHUCRequest req = new PartnerStopSessionHUCRequest(mapper, partner.getAuthToken().getId(), partner.getId() , getId());
@@ -815,6 +852,23 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
+  const recoverPassword: StateContextType['recoverPassword'] = (email: string) => {
+    setIsFetching(true);
+    return contextValue
+      .recoverPassword(email)
+      .then(res => {
+        // setCode(res);
+        setPasswordReset(true);
+        setIsFetching(false);
+        return res;
+      })
+      .catch(err => {
+        setError(err);
+        setIsFetching(false);
+        return Promise.reject(err);
+      });
+  };
+
 
   // const signIn: StateContextType['signIn'] = (email, password) => {
   //   setIsFetching(true);
@@ -848,6 +902,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
         cancelSession,
         getAvailability,
         updateAvailability,
+        recoverPassword,
       }}
     >
       {props.children}

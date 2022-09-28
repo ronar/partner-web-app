@@ -13,8 +13,7 @@ import PasswordResetPage from './components/LoginPage/PasswordReset';
 import PasswordResetInstructionsSent from './components/LoginPage/PasswordResetInstructionsSent';
 import PasswordResetNewPassword from './components/LoginPage/PasswordResetNewPassword';
 import MainPage from './components/MainPage/MainPage';
-import Month from './components/AvailabilityPicker/Month/Month';
-import AvailabilityPicker from './components/AvailabilityPicker/AvailabilityPicker';
+import AvailabilityCalendarPage from './components/AvailabilityCalendarPage/AvailabilityCalendarPage';
 import AreasPage from './components/AreasPage/AreasPage';
 import SessionsPage from './components/SessionsPage/SessionsPage';
 import SessionDetails from './components/SessionDetails/SessionDetails';
@@ -76,7 +75,7 @@ export const ReactApp = () => (
               <AreasPage />
             </PrivateRoute>
             <PrivateRoute path="/availability-calendar">
-              <AvailabilityPicker />
+              <AvailabilityCalendarPage />
             </PrivateRoute>
             <PrivateRoute exact path="/sessions-page">
               <SessionsPage />

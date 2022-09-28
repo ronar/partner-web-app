@@ -73,6 +73,7 @@ const styles = {
     background: 'transparent',
     border: '0',
     padding: '0',
+    color: '#E94E32',
   },
 };
 
@@ -442,6 +443,32 @@ export default function AvailabilityPicker(props: {
 
   const isRtl = false;
 
+  // <div className='ap-calendar-footer'>
+  //               <button
+  //                   type='button'
+  //                   className='ap-btn ap-calendar-btn ap-calendar-btn-left'
+  //                   // onClick={this.handleMoveBack}
+  //                   // disabled={isDisabled || !dates.inRange(this.nextDate('LEFT'), min, max, view)}
+  //               >
+  //                   <svg width='8' height='13' viewBox='0 0 8 13' xmlns='http://www.w3.org/2000/svg' className='tb-icon'>
+  //                       <path fillRule='evenodd' d='M8 11.5L6.5 13L5.68248e-07 6.5L6.5 -1.31134e-07L8 1.5L3 6.5L8 11.5Z' />
+  //                   </svg>
+  //                   {/*{this.getHeaderLabel('LEFT')}*/}
+  //               </button>
+  //               <button
+  //                   type='button'
+  //                   className='ap-btn ap-calendar-btn ap-calendar-btn-right'
+  //                   // onClick={this.handleMoveForward}
+  //                   // disabled={isDisabled || !dates.inRange(this.nextDate('RIGHT'), min, max, view)}
+  //                   // label={messages.moveForward()}
+  //               >
+  //                   {/*{this.getHeaderLabel('RIGHT')}*/}
+  //                   <svg width='8' height='13' viewBox='0 0 8 13' xmlns='http://www.w3.org/2000/svg' className='tb-icon'>
+  //                       <path fillRule='evenodd' d='M0 1.5L1.5 0L8 6.5L1.5 13L0 11.5L5 6.5L0 1.5Z' />
+  //                   </svg>
+  //               </button>
+  //           </div>
+
   return (
     <div
             // {...elementProps}
@@ -493,32 +520,6 @@ export default function AvailabilityPicker(props: {
                 />
 
             {/*</SlideTransitionGroup>*/}
-            <div className='ap-calendar-footer'>
-                <button
-                    type='button'
-                    className='ap-btn ap-calendar-btn ap-calendar-btn-left'
-                    // onClick={this.handleMoveBack}
-                    // disabled={isDisabled || !dates.inRange(this.nextDate('LEFT'), min, max, view)}
-                >
-                    <svg width='8' height='13' viewBox='0 0 8 13' xmlns='http://www.w3.org/2000/svg' className='tb-icon'>
-                        <path fillRule='evenodd' d='M8 11.5L6.5 13L5.68248e-07 6.5L6.5 -1.31134e-07L8 1.5L3 6.5L8 11.5Z' />
-                    </svg>
-                    {/*{this.getHeaderLabel('LEFT')}*/}
-                </button>
-                <button
-                    type='button'
-                    className='ap-btn ap-calendar-btn ap-calendar-btn-right'
-                    // onClick={this.handleMoveForward}
-                    // disabled={isDisabled || !dates.inRange(this.nextDate('RIGHT'), min, max, view)}
-                    // label={messages.moveForward()}
-                >
-                    {/*{this.getHeaderLabel('RIGHT')}*/}
-                    <svg width='8' height='13' viewBox='0 0 8 13' xmlns='http://www.w3.org/2000/svg' className='tb-icon'>
-                        <path fillRule='evenodd' d='M0 1.5L1.5 0L8 6.5L1.5 13L0 11.5L5 6.5L0 1.5Z' />
-                    </svg>
-                </button>
-            </div>
-
 
 
             <SlidingUpPanel

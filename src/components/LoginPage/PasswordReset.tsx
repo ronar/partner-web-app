@@ -97,12 +97,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function PasswordResetPage() {
   const classes = useStyles();
-  const { signIn, user, isAuthReady } = useAppState();
+  const { signIn, user, recoverPassword, isAuthReady } = useAppState();
   const history = useHistory();
   const location = useLocation<{ from: Location }>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
+  const [passwordReset, setPasswordReset] = useState<any>(null);
+  const [hasPasswordBeenReset, setHasPasswordBeenReset] = useState<boolean>(false);
+  const [ formFeedback, setFormFeedback ] = useState({ title: '', text: '', status: '' });
 
   const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
 
@@ -115,11 +118,35 @@ export default function PasswordResetPage() {
     //   .catch(err => setAuthError(err));
   };
 
+  // const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   // login();
+  //   history.replace('/password-reset-instructions');
+  // };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setAuthError(null);
+
+    if (!email) {
+      setAuthError(new Error('Please enter a valid email'));
+    }
+
+    recoverPassword(email)
+      .then(resp => {
+        setPasswordReset(true);
+        history.replace('/password-reset-instructions');
+      })
+      .catch(err => {
+        if (err.status == 422) {
+          setAuthError(new Error(`${err.message}`));
+        }
+      });
+
     // login();
-    history.replace('/password-reset-instructions');
   };
+
 
   // if (user || !isAuthEnabled) {
   //   history.replace('/');

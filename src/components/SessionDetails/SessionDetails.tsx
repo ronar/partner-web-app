@@ -38,6 +38,10 @@ import Location64Icon from '../../icons/Location64Icon';
 import SessionOnline64Icon from '../../icons/SessionOnline64Icon';
 import WoKickboxingIcon from '../../icons/WoKickboxingIcon';
 import CopyIcon from '../../icons/CopyIcon';
+import PlacesIcon from '../../icons/PlacesIcon';
+
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
 import BottomNavigation from '../BottomNavigation/BottomNavigation';
 
@@ -166,6 +170,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: 'transparent',
     border: '0',
     padding: '0',
+    color: theme.red, // '#E94E32'
   },
   declineButton: {
     cursor: 'pointer',
@@ -239,6 +244,16 @@ interface SessionDetailsProps {
   onDeclineSessionClick(): void;
   onClose(): void;
 }
+
+/*<MapView.Marker // @ts-ignore
+                // key={index}
+                coordinate={{
+                  latitude: booking?.location?.latitude,
+                  longitude: booking?.location?.longitude,
+                }}
+                // title={marker.title}
+                // description={marker.description}
+              />*/
 
 export default function SessionDetails({ booking, sessionType, declineStatus, culture, onRunningLateClick, onDeclineSessionClick, onClick, onClose }: PropsWithChildren<SessionDetailsProps>) {
   const classes = useStyles();
@@ -331,8 +346,12 @@ export default function SessionDetails({ booking, sessionType, declineStatus, cu
   const handleLocationOpenClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     const isOnline = booking?.product.id.includes('_LS');
 
-    if (isOnline) {
-
+    if (!isOnline) {
+      window.open(
+        `https://maps.google.com/?q=${booking?.location?.latitude},${booking?.location?.longitude}`,
+        '_blank' // <- This is what makes it open in a new window.
+      );
+      // window.location.href = `https://maps.google.com/?q=${booking?.location?.latitude},${booking?.location?.longitude}`;
     }
 
   }, [booking]);
@@ -415,7 +434,7 @@ export default function SessionDetails({ booking, sessionType, declineStatus, cu
         </button>
       </Box>
       <Typography variant="button" color="primary" className={clsx( classes.gutterBottom )} style={{ flexGrow: 1 }}>
-          Sessions Details
+          Session Details
       </Typography>
     </Box>
 
@@ -593,7 +612,40 @@ export default function SessionDetails({ booking, sessionType, declineStatus, cu
             />
           </Box>
         :
-          <img src={sessionDetailsMapImg} width="343pxh" height="154px"  />
+          <Box
+            sx={{
+              position: 'relative',
+              height: '154px'
+            }}
+          >
+            {booking?.location?.latitude && (
+              <>
+            <MapView
+              // width="343pxh"
+              initialRegion={{
+                latitude: booking?.location?.latitude, // 37.78825,
+                longitude: booking?.location?.longitude, // -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
+
+            </MapView>
+            <Box
+                sx={{
+                  left: '50%',
+                  top: '50%',
+                  position: 'absolute',
+                }}
+                style={{
+                  transform: 'translate(-50%, -50%)',
+                }}
+              >
+                <PlacesIcon />
+              </Box>
+              </>
+            )}
+          </Box>
         }
 
         <Box
@@ -658,7 +710,7 @@ export default function SessionDetails({ booking, sessionType, declineStatus, cu
               // userSelect: 'none',
               // borderRadius: 8
             }}
-            onClick={handleLocationOpenClick}
+            // onClick={handleLocationOpenClick}
           >
             {isOnline ?
               <Button href={booking?.roomUrl} className={classes.buttonsDuet}>

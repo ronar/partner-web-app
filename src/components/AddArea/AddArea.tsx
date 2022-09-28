@@ -3,6 +3,8 @@ import { Area } from '../../types';
 import clsx from 'clsx';
 import { useAppState } from '../../state';
 
+import { List as ListVirtualized } from 'react-virtualized';
+
 import Button from '@material-ui/core/Button';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Grid from '@material-ui/core/Grid';
@@ -34,6 +36,8 @@ import BottomNavigation from '../BottomNavigation/BottomNavigation';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { useLocation, useHistory } from 'react-router-dom';
+
+import { getDimentions } from '../../utils';
 
 import { areas } from '../../areas';
 
@@ -79,13 +83,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   passcodeContainer: {
     minHeight: '120px',
   },
+  // submitButton: {
+  //   [theme.breakpoints.down('sm')]: {
+  //     width: '100%',
+  //   },
+  // },
   submitButton: {
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  addAreaCtaButton: {
-    marginBottom: 8,
+    marginTop: 16,
+    marginBottom: 16,
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
@@ -116,6 +121,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: 'transparent',
     border: '0',
     padding: '0',
+    color: theme.red,
   },
 }));
 
@@ -123,6 +129,8 @@ interface AddAreaProps {
   // open: boolean;
   onClose(): void;
 }
+
+const { width, height } = getDimentions();
 
 export default function AddArea({ onClose }: PropsWithChildren<AddAreaProps>) {
   const classes = useStyles();
@@ -248,6 +256,53 @@ export default function AddArea({ onClose }: PropsWithChildren<AddAreaProps>) {
     }
   }, [selectedAreas, setSelectedAreas]);
 
+  const listData = filteredAreas.filter(area => area.outward);
+
+  const renderRow = ({ index, key, style }: { index: number, key: any, style: any }) => (
+    <ListItem button style={{ ...style, paddingLeft: 0, paddingRight: 0, backgroundColor: 'white' }} key={key}>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        flex="1"
+      >
+        {/*<ListItemIcon
+          classes={{
+            root: classes.root,
+          }}
+        >
+          <LocationIcon />
+        </ListItemIcon>*/}
+        <ListItemText
+          primaryTypographyProps={{
+            variant: "button",
+            display: "inline",
+            color: "primary"
+          }}
+          secondaryTypographyProps={{
+            variant: "subtitle1",
+            display: "inline",
+            color: "primary"
+          }}
+          primary={`${listData[index] && listData[index].outward}, `}
+          secondary={listData[index] && listData[index].town}
+          // style={{ marginLeft: 16 }}
+        />
+        <Checkbox
+          checked={!!(selectedAreas.find(v => v.outward === listData[index].outward))}
+          onChange={toggleArea(listData[index])}
+          value="checkedA"
+          checkedIcon={<CheckBoxIcon />}
+          icon={<CheckBoxUncheckedIcon />}
+          inputProps={{ 'aria-label': 'Checkbox A' }}
+          // onToggle={handle
+        />
+
+      </Box>
+    <Divider style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}/>
+    </ListItem>
+  );
+
 
   return (
     <>
@@ -304,7 +359,7 @@ export default function AddArea({ onClose }: PropsWithChildren<AddAreaProps>) {
         4 postcodes covered:
     </Typography>*/}
 
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ height: '100%' }}>
 
     <RoundedContainer
       style={{ height: 'calc(100% - 126px)', overflow: 'scroll' }}
@@ -315,52 +370,13 @@ export default function AddArea({ onClose }: PropsWithChildren<AddAreaProps>) {
       >
       <Container maxWidth="sm" disableGutters style={{ flexGrow: 1 }}>
         <List component="nav" aria-label="mailbox folders" disablePadding className={''}>
-        {filteredAreas.map(area => (
-          <>
-          <ListItem button style={{ paddingLeft: 0, paddingRight: 0 }} key={area.outward}>
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              flex="1"
-            >
-              <ListItemIcon
-                classes={{
-                  root: classes.root,
-                }}
-              >
-                <LocationIcon />
-              </ListItemIcon>
-              <ListItemText
-                primaryTypographyProps={{
-                  variant: "button",
-                  display: "inline",
-                  color: "primary"
-                }}
-                secondaryTypographyProps={{
-                  variant: "subtitle1",
-                  display: "inline",
-                  color: "primary"
-                }}
-                primary={`${area && area.outward}, `}
-                secondary={area && area.town}
-                style={{ marginLeft: 16 }}
-              />
-              <Checkbox
-                checked={!!(selectedAreas.find(v => v.outward === area.outward))}
-                onChange={toggleArea(area)}
-                value="checkedA"
-                checkedIcon={<CheckBoxIcon />}
-                icon={<CheckBoxUncheckedIcon />}
-                inputProps={{ 'aria-label': 'Checkbox A' }}
-                // onToggle={handle
-              />
-
-            </Box>
-          </ListItem>
-          <Divider />
-          </>
-        ))}
+          <ListVirtualized
+            width={width - 32}
+            height={1200}
+            rowHeight={96}
+            rowRenderer={renderRow}
+            rowCount={listData.length}
+          />
 
           {/*<ListItem button divider style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Box
@@ -486,7 +502,7 @@ export default function AddArea({ onClose }: PropsWithChildren<AddAreaProps>) {
           color="primary"
           type="submit"
           // disabled={!password.length}
-          className={classes.addAreaCtaButton}
+          className={classes.submitButton}
           // onClick={onClose}
         >
           {/*<PlusIcon />*/}

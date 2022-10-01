@@ -1,36 +1,17 @@
 {
   "files": {
-    "main.css": "/partner-web-app/static/css/main.32f81bc4.css",
-    "main.js": "/partner-web-app/static/js/main.da6ab004.js",
-    "static/media/Contemporary.jpg": "/partner-web-app/static/media/Contemporary.cf81b0403bccc42b006d.jpg",
-    "static/media/CozyHome.jpg": "/partner-web-app/static/media/CozyHome.2358a4e41e509121f63b.jpg",
-    "static/media/CoffeeShop.jpg": "/partner-web-app/static/media/CoffeeShop.0bc87a8a29fb60864759.jpg",
-    "static/media/BohoHome.jpg": "/partner-web-app/static/media/BohoHome.94b66110ce80612bc57e.jpg",
-    "static/media/Bookshelf.jpg": "/partner-web-app/static/media/Bookshelf.1791e55a43e46dcebf10.jpg",
-    "static/media/ModernHome.jpg": "/partner-web-app/static/media/ModernHome.9d73ece7955b1b62b975.jpg",
-    "static/media/Nature.jpg": "/partner-web-app/static/media/Nature.ae7c02d27ef6bf2be7f4.jpg",
-    "static/media/Ocean.jpg": "/partner-web-app/static/media/Ocean.a3116b079f8518d79e07.jpg",
-    "static/media/Patio.jpg": "/partner-web-app/static/media/Patio.b947b33e031dba356005.jpg",
-    "static/media/Plant.jpg": "/partner-web-app/static/media/Plant.d156b0afd40ae1a34707.jpg",
-    "static/media/Kitchen.jpg": "/partner-web-app/static/media/Kitchen.d07698778b0246076ff7.jpg",
+    "main.js": "/partner-web-app/static/js/main.f67cfddc.js",
     "static/media/BebasNeue-Regular.ttf": "/partner-web-app/static/media/BebasNeue-Regular.7d2f1e3c43251f14336c.ttf",
     "static/media/BebasNeue-Bold.ttf": "/partner-web-app/static/media/BebasNeue-Bold.0fff693ee8f49e3b60f2.ttf",
-    "static/media/Fishing.jpg": "/partner-web-app/static/media/Fishing.5bc4c2060dd7712bdbb1.jpg",
-    "static/media/Abstract.jpg": "/partner-web-app/static/media/Abstract.bf969afca331e21b140d.jpg",
-    "static/media/Flower.jpg": "/partner-web-app/static/media/Flower.0668304c1a2fcee42c02.jpg",
-    "static/media/Desert.jpg": "/partner-web-app/static/media/Desert.76a1e7e3429badd3a7d4.jpg",
-    "static/media/SanFrancisco.jpg": "/partner-web-app/static/media/SanFrancisco.5eb64308f3062e27a847.jpg",
     "static/media/BebasNeue-Bold.woff": "/partner-web-app/static/media/BebasNeue-Bold.3a1f6da257e307578f85.woff",
     "static/media/BebasNeue-Regular.woff": "/partner-web-app/static/media/BebasNeue-Regular.be4b83e55f8bb37d6440.woff",
     "static/media/BebasNeue-Bold.woff2": "/partner-web-app/static/media/BebasNeue-Bold.8768834759eb29da26d7.woff2",
     "static/media/BebasNeue-Regular.woff2": "/partner-web-app/static/media/BebasNeue-Regular.46629f617f69b1ab231f.woff2",
     "static/media/google-logo.svg": "/partner-web-app/static/media/google-logo.8d51f1707fc814981611c1b7cfe58b88.svg",
     "index.html": "/partner-web-app/index.html",
-    "main.32f81bc4.css.map": "/partner-web-app/static/css/main.32f81bc4.css.map",
-    "main.da6ab004.js.map": "/partner-web-app/static/js/main.da6ab004.js.map"
+    "main.f67cfddc.js.map": "/partner-web-app/static/js/main.f67cfddc.js.map"
   },
   "entrypoints": [
-    "static/css/main.32f81bc4.css",
-    "static/js/main.da6ab004.js"
+    "static/js/main.f67cfddc.js"
   ]
 }

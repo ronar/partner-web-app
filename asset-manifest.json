@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/partner-web-app/static/js/main.0f7f1544.js",
+    "main.js": "/partner-web-app/static/js/main.e9a385d8.js",
     "static/media/BebasNeue-Regular.ttf": "/partner-web-app/static/media/BebasNeue-Regular.7d2f1e3c43251f14336c.ttf",
     "static/media/BebasNeue-Bold.ttf": "/partner-web-app/static/media/BebasNeue-Bold.0fff693ee8f49e3b60f2.ttf",
     "service-worker.js": "/partner-web-app/service-worker.js",
@@ -10,9 +10,9 @@
     "static/media/BebasNeue-Regular.woff2": "/partner-web-app/static/media/BebasNeue-Regular.46629f617f69b1ab231f.woff2",
     "index.html": "/partner-web-app/index.html",
     "static/media/google-logo.svg": "/partner-web-app/static/media/google-logo.8d51f1707fc814981611c1b7cfe58b88.svg",
-    "main.0f7f1544.js.map": "/partner-web-app/static/js/main.0f7f1544.js.map"
+    "main.e9a385d8.js.map": "/partner-web-app/static/js/main.e9a385d8.js.map"
   },
   "entrypoints": [
-    "static/js/main.0f7f1544.js"
+    "static/js/main.e9a385d8.js"
   ]
 }

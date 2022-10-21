@@ -1,4 +1,5 @@
 {
+  "short_name": "Partner",
   "name": "TruBe Partner",
   "lang": "en-GB",
   "description": "Join the UK’s leading on-demand fitness and wellness company.",
@@ -18,6 +19,7 @@
     "src": "https://static.trubeapp.com/live/assets/images/icons/apple-touch-icon-76x76.png",
     "sizes": "76x76"
   }],
+  "start_url": "/?source=pwa",
   "display": "fullscreen",
   "theme_color": "#e74f3a",
   "background_color": "#ffffff"

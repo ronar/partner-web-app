@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/partner-web-app/static/js/main.de77e414.js",
+    "main.js": "/partner-web-app/static/js/main.637adc7a.js",
     "static/media/BebasNeue-Regular.ttf": "/partner-web-app/static/media/BebasNeue-Regular.7d2f1e3c43251f14336c.ttf",
     "static/media/BebasNeue-Bold.ttf": "/partner-web-app/static/media/BebasNeue-Bold.0fff693ee8f49e3b60f2.ttf",
     "service-worker.js": "/partner-web-app/service-worker.js",
@@ -9,9 +9,9 @@
     "static/media/BebasNeue-Bold.woff2": "/partner-web-app/static/media/BebasNeue-Bold.8768834759eb29da26d7.woff2",
     "static/media/BebasNeue-Regular.woff2": "/partner-web-app/static/media/BebasNeue-Regular.46629f617f69b1ab231f.woff2",
     "index.html": "/partner-web-app/index.html",
-    "main.de77e414.js.map": "/partner-web-app/static/js/main.de77e414.js.map"
+    "main.637adc7a.js.map": "/partner-web-app/static/js/main.637adc7a.js.map"
   },
   "entrypoints": [
-    "static/js/main.de77e414.js"
+    "static/js/main.637adc7a.js"
   ]
 }
